@@ -541,23 +541,6 @@ warn(){
 die(){
     log "$@"
     echo "$error_color$bold_color$@$reset_color"
-    cat <<EOF
-
-If you think configure made a mistake, make sure you are using the latest
-version from Git.  If the latest version fails, report the problem to the
-ffmpeg-user@ffmpeg.org mailing list or IRC #ffmpeg on irc.libera.chat.
-EOF
-    if disabled logging; then
-        cat <<EOF
-Rerun configure with logging enabled (do not use --disable-logging), and
-include the log this produces with your report.
-EOF
-    else
-        cat <<EOF
-Include the log file "$logfile" produced by configure as this will help
-solve the problem.
-EOF
-    fi
     exit 1
 }
 
@@ -1163,8 +1146,8 @@ test_ld(){
     log test_ld "$@"
     type=$1
     shift 1
-    flags=$(filter_out '-l*|*.so' $@)
-    libs=$(filter '-l*|*.so' $@)
+    flags=$(filter_out '-l*|*.so|*.a' $@)
+    libs=$(filter '-l*|*.so|*.a' $@)
     test_$type $($cflags_filter $flags) || return
     flags=$($ldflags_filter $flags)
     libs=$($ldflags_filter $libs)
@@ -3815,7 +3798,7 @@ swscale_deps="avutil"
 swscale_suggest="libm stdatomic"
 
 avcodec_extralibs="pthreads_extralibs iconv_extralibs dxva2_extralibs lcms2_extralibs"
-avfilter_extralibs="pthreads_extralibs"
+avfilter_extralibs="pthreads_extralibs vips_extralibs esmbot_processing_extralibs"
 avutil_extralibs="d3d11va_extralibs nanosleep_extralibs pthreads_extralibs vaapi_drm_extralibs vaapi_x11_extralibs vdpau_x11_extralibs"
 
 # programs
@@ -6516,6 +6499,11 @@ done
 for func in $COMPLEX_FUNCS; do
     eval check_complexfunc $func \${${func}_args:-1}
 done
+
+# esmBot dependencies
+require_pkg_config libvips vips vips/vips.h vips_init
+check_lib esmbot_processing "$PWD/../processing/processing.h" esmbot_generate_caption_img "$PWD/../processing/build/libesmbot-processing.a" $(pkg-config --libs vips-cpp) -lstdc++ ||
+  die "ERROR: esmBot image processing library not found. Make sure you ran natives/processing/build.sh and try again."
 
 # these are off by default, so fail if requested and not available
 enabled avisynth          && { require_headers "avisynth/avisynth_c.h avisynth/avs/version.h" &&

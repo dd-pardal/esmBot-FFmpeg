@@ -601,6 +601,10 @@ OBJS-$(CONFIG_AVSYNCTEST_FILTER)             += src_avsynctest.o
 OBJS-$(CONFIG_AMOVIE_FILTER)                 += src_movie.o
 OBJS-$(CONFIG_MOVIE_FILTER)                  += src_movie.o
 
+# esmBot filters
+OBJS-$(CONFIG_EBCAPTION_FILTER)              += vsrc_ebcaption.o libvips_common.o
+OBJS-$(CONFIG_EBCAPTIONREF_FILTER)           += vsrc_ebcaption.o libvips_common.o
+
 # Objects duplicated from other libraries for shared builds
 SHLIBOBJS                                    += log2_tab.o
 
