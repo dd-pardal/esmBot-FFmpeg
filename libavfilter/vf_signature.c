@@ -46,8 +46,6 @@ static const AVOption signature_options[] = {
         { "fast", NULL, 0, AV_OPT_TYPE_CONST, {.i64 = MODE_FAST}, 0, 0, .flags = FLAGS, "mode" },
     { "nb_inputs",  "number of inputs",
         OFFSET(nb_inputs),    AV_OPT_TYPE_INT,    {.i64 = 1},        1, INT_MAX,          FLAGS },
-    { "filename",   "filename for output files",
-        OFFSET(filename),     AV_OPT_TYPE_STRING, {.str = ""},       0, NB_FORMATS-1,     FLAGS },
     { "format",     "set output format",
         OFFSET(format),       AV_OPT_TYPE_INT,    {.i64 = FORMAT_BINARY}, 0, 1,           FLAGS , "format" },
         { "binary", 0, 0, AV_OPT_TYPE_CONST, {.i64=FORMAT_BINARY}, 0, 0, FLAGS, "format" },
@@ -642,6 +640,8 @@ static av_cold int init(AVFilterContext *ctx)
     StreamContext *sc;
     int i, ret;
     char tmp[1024];
+
+    sic->filename = "";
 
     sic->streamcontexts = av_mallocz(sic->nb_inputs * sizeof(StreamContext));
     if (!sic->streamcontexts)

@@ -61,6 +61,7 @@
 #include "drawutils.h"
 #include "formats.h"
 #include "internal.h"
+#include "safepath.h"
 #include "video.h"
 
 #if CONFIG_LIBFRIBIDI
@@ -229,7 +230,6 @@ typedef struct DrawTextContext {
 static const AVOption drawtext_options[]= {
     {"fontfile",    "set font file",        OFFSET(fontfile),           AV_OPT_TYPE_STRING, {.str=NULL},  0, 0, FLAGS},
     {"text",        "set text",             OFFSET(text),               AV_OPT_TYPE_STRING, {.str=NULL},  0, 0, FLAGS},
-    {"textfile",    "set text file",        OFFSET(textfile),           AV_OPT_TYPE_STRING, {.str=NULL},  0, 0, FLAGS},
     {"fontcolor",   "set foreground color", OFFSET(fontcolor.rgba),     AV_OPT_TYPE_COLOR,  {.str="black"}, 0, 0, FLAGS},
     {"fontcolor_expr", "set foreground color expression", OFFSET(fontcolor_expr), AV_OPT_TYPE_STRING, {.str=""}, 0, 0, FLAGS},
     {"boxcolor",    "set box color",        OFFSET(boxcolor.rgba),      AV_OPT_TYPE_COLOR,  {.str="white"}, 0, 0, FLAGS},
@@ -724,6 +724,11 @@ static av_cold int init(AVFilterContext *ctx)
     int err;
     DrawTextContext *s = ctx->priv;
     Glyph *glyph;
+
+    if (s->fontfile && !ff_safepath_is_safe_font(s->fontfile)) {
+        ff_safepath_log_error(ctx, s->fontfile);
+        return AVERROR(EINVAL);
+    }
 
     av_expr_free(s->fontsize_pexpr);
     s->fontsize_pexpr = NULL;

@@ -65,7 +65,6 @@ typedef struct LIBVMAFContext {
 
 static const AVOption libvmaf_options[] = {
     {"model_path",  "use model='path=...'.",                                            OFFSET(model_path), AV_OPT_TYPE_STRING, {.str=NULL}, 0, 1, FLAGS|AV_OPT_FLAG_DEPRECATED},
-    {"log_path",  "Set the file path to be used to write log.",                         OFFSET(log_path), AV_OPT_TYPE_STRING, {.str=NULL}, 0, 1, FLAGS},
     {"log_fmt",  "Set the format of the log (csv, json, xml, or sub).",                 OFFSET(log_fmt), AV_OPT_TYPE_STRING, {.str="xml"}, 0, 1, FLAGS},
     {"enable_transform",  "use model='enable_transform=true'.",                         OFFSET(enable_transform), AV_OPT_TYPE_BOOL, {.i64=0}, 0, 1, FLAGS|AV_OPT_FLAG_DEPRECATED},
     {"phone_model",  "use model='enable_transform=true'.",                              OFFSET(phone_model), AV_OPT_TYPE_BOOL, {.i64=0}, 0, 1, FLAGS|AV_OPT_FLAG_DEPRECATED},

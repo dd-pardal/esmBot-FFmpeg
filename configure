@@ -4234,6 +4234,28 @@ for opt do
     esac
 done
 
+# Disable filters that are useless without external files
+disable arnndn_filter
+disable asr_filter
+disable derain_filter
+disable dnn_classify_filter
+disable dnn_detect_filter
+disable dnn_processing_filter
+disable fieldhint_filter
+disable ladspa_filter
+disable lv2_filter
+disable nnedi_filter
+disable openclsrc_filter
+disable program_opencl_filter
+disable removelogo_filter
+disable sofalizer_filter
+disable sr_filter
+disable ssim_filter
+disable subtitles_filter
+disable vidstabdetect_filter
+disable vidstabtransform_filter
+disable vmafmotion_filter
+
 for e in $env; do
     eval "export $e"
 done

@@ -108,7 +108,6 @@ static const AVOption selectivecolor_options[] = {
     RANGE_OPTION("white",   RANGE_WHITES),
     RANGE_OPTION("neutral", RANGE_NEUTRALS),
     RANGE_OPTION("black",   RANGE_BLACKS),
-    { "psfile", "set Photoshop selectivecolor file name", OFFSET(psfile), AV_OPT_TYPE_STRING, {.str=NULL}, .flags = FLAGS },
     { NULL }
 };
 

@@ -21,6 +21,7 @@ OBJS = allfilters.o                                                     \
        framequeue.o                                                     \
        graphdump.o                                                      \
        graphparser.o                                                    \
+       safepath.o                                                       \
        version.o                                                        \
        video.o                                                          \
 

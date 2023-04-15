@@ -91,6 +91,7 @@ static int xfade_opencl_load(AVFilterContext *avctx,
     ctx->nb_planes = main_planes;
 
     if (ctx->transition == CUSTOM) {
+        return AVERROR(EINVAL);
         err = ff_opencl_filter_load_program_from_file(avctx, ctx->source_file);
     } else {
         err = ff_opencl_filter_load_program(avctx, &ff_opencl_source_xfade, 1);
@@ -389,8 +390,6 @@ static const AVOption xfade_opencl_options[] = {
     {   "slideright", "slide right transition", 0, AV_OPT_TYPE_CONST, {.i64=SLIDERIGHT}, 0, 0, FLAGS, "transition" },
     {   "slideup",    "slide up transition",    0, AV_OPT_TYPE_CONST, {.i64=SLIDEUP},    0, 0, FLAGS, "transition" },
     {   "slidedown",  "slide down transition",  0, AV_OPT_TYPE_CONST, {.i64=SLIDEDOWN},  0, 0, FLAGS, "transition" },
-    { "source", "set OpenCL program source file for custom transition", OFFSET(source_file), AV_OPT_TYPE_STRING, {.str = NULL}, .flags = FLAGS },
-    { "kernel", "set kernel name in program file for custom transition", OFFSET(kernel_name), AV_OPT_TYPE_STRING, {.str = NULL}, .flags = FLAGS },
     { "duration", "set cross fade duration", OFFSET(duration), AV_OPT_TYPE_DURATION, {.i64=1000000}, 0, 60000000, FLAGS },
     { "offset",   "set cross fade start relative to first input stream", OFFSET(offset), AV_OPT_TYPE_DURATION, {.i64=0}, INT64_MIN, INT64_MAX, FLAGS },
     { NULL }

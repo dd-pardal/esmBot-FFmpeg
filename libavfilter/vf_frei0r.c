@@ -202,6 +202,9 @@ static av_cold int frei0r_init(AVFilterContext *ctx,
     if (!dl_name) {
         av_log(ctx, AV_LOG_ERROR, "No filter name provided.\n");
         return AVERROR(EINVAL);
+    } else if (strstr(dl_name, "..")) {
+        av_log(ctx, AV_LOG_ERROR, "Unsafe filter name.\n");
+        return AVERROR(EINVAL);
     }
 
     /* see: http://frei0r.dyne.org/codedoc/html/group__pluglocations.html */

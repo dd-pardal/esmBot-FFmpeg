@@ -48,6 +48,7 @@
 #include "avfilter.h"
 #include "formats.h"
 #include "internal.h"
+#include "safepath.h"
 #include "video.h"
 
 typedef struct MovieStream {
@@ -222,6 +223,11 @@ static av_cold int movie_common_init(AVFilterContext *ctx)
 
     if (!movie->file_name) {
         av_log(ctx, AV_LOG_ERROR, "No filename provided!\n");
+        return AVERROR(EINVAL);
+    }
+
+    if (!ff_safepath_is_safe(movie->file_name)) {
+        ff_safepath_log_error(ctx, movie->file_name);
         return AVERROR(EINVAL);
     }
 

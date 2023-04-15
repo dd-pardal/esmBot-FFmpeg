@@ -1214,7 +1214,6 @@ static int process_command(AVFilterContext *ctx, const char *cmd, const char *ar
 #define COMMON_OPTIONS_OFFSET CONFIG_LUT3D_FILTER
 static const AVOption lut3d_haldclut_options[] = {
 #if CONFIG_LUT3D_FILTER
-    { "file", "set 3D LUT file name", OFFSET(file), AV_OPT_TYPE_STRING, {.str=NULL}, .flags = FLAGS },
 #endif
 #if CONFIG_HALDCLUT_FILTER
     { "clut", "when to process CLUT", OFFSET(clut), AV_OPT_TYPE_INT, {.i64=1}, 0, 1, .flags = TFLAGS, "clut" },
@@ -1768,7 +1767,6 @@ try_again:
 }
 
 static const AVOption lut1d_options[] = {
-    { "file", "set 1D LUT file name", OFFSET(file), AV_OPT_TYPE_STRING, {.str=NULL}, .flags = TFLAGS },
     { "interp", "select interpolation mode", OFFSET(interpolation),    AV_OPT_TYPE_INT, {.i64=INTERPOLATE_1D_LINEAR}, 0, NB_INTERP_1D_MODE-1, TFLAGS, "interp_mode" },
         { "nearest", "use values from the nearest defined points", 0, AV_OPT_TYPE_CONST, {.i64=INTERPOLATE_1D_NEAREST},   0, 0, TFLAGS, "interp_mode" },
         { "linear",  "use values from the linear interpolation",   0, AV_OPT_TYPE_CONST, {.i64=INTERPOLATE_1D_LINEAR},    0, 0, TFLAGS, "interp_mode" },

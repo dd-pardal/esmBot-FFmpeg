@@ -112,8 +112,6 @@ static const AVOption curves_options[] = {
     { "blue",  "set blue points coordinates",  OFFSET(comp_points_str[2]), AV_OPT_TYPE_STRING, {.str=NULL}, .flags = FLAGS },
     { "b",     "set blue points coordinates",  OFFSET(comp_points_str[2]), AV_OPT_TYPE_STRING, {.str=NULL}, .flags = FLAGS },
     { "all",   "set points coordinates for all components", OFFSET(comp_points_str_all), AV_OPT_TYPE_STRING, {.str=NULL}, .flags = FLAGS },
-    { "psfile", "set Photoshop curves file name", OFFSET(psfile), AV_OPT_TYPE_STRING, {.str=NULL}, .flags = FLAGS },
-    { "plot", "save Gnuplot script of the curves in specified file", OFFSET(plot_filename), AV_OPT_TYPE_STRING, {.str=NULL}, .flags = FLAGS },
     { "interp", "specify the kind of interpolation", OFFSET(interp), AV_OPT_TYPE_INT, {.i64=INTERP_NATURAL}, INTERP_NATURAL, NB_INTERPS-1, FLAGS, "interp_name" },
         { "natural", "natural cubic spline", 0, AV_OPT_TYPE_CONST, {.i64=INTERP_NATURAL}, 0, 0, FLAGS, "interp_name" },
         { "pchip",   "monotonically cubic interpolation", 0, AV_OPT_TYPE_CONST, {.i64=INTERP_PCHIP},   0, 0, FLAGS, "interp_name" },

@@ -214,11 +214,7 @@ static int parse_iplconvkernel(IplConvKernel **kernel, char *buf, void *log_ctx)
     if      (!strcmp(shape_str, "rect"   )) shape = CV_SHAPE_RECT;
     else if (!strcmp(shape_str, "cross"  )) shape = CV_SHAPE_CROSS;
     else if (!strcmp(shape_str, "ellipse")) shape = CV_SHAPE_ELLIPSE;
-    else if (!strcmp(shape_str, "custom" )) {
-        shape = CV_SHAPE_CUSTOM;
-        if ((ret = read_shape_from_file(&cols, &rows, &values, shape_filename, log_ctx)) < 0)
-            return ret;
-    } else {
+    else {
         av_log(log_ctx, AV_LOG_ERROR,
                "Shape unspecified or type '%s' unknown.\n", shape_str);
         ret = AVERROR(EINVAL);
