@@ -618,6 +618,12 @@ OBJS-$(CONFIG_AVSYNCTEST_FILTER)             += src_avsynctest.o
 OBJS-$(CONFIG_AMOVIE_FILTER)                 += src_movie.o
 OBJS-$(CONFIG_MOVIE_FILTER)                  += src_movie.o
 
+# esmBot filters
+OBJS-$(CONFIG_EBCAPTION_FILTER)              += vsrc_ebimage.o vipsutils.o
+OBJS-$(CONFIG_EBCAPTIONREF_FILTER)           += vsrc_ebimage.o vipsutils.o
+OBJS-$(CONFIG_EBMEME_FILTER)                 += vsrc_ebimage.o vipsutils.o
+OBJS-$(CONFIG_EBMEMEREF_FILTER)              += vsrc_ebimage.o vipsutils.o
+
 # Objects duplicated from other libraries for shared builds
 SHLIBOBJS                                    += log2_tab.o
 
@@ -626,6 +632,7 @@ SHLIBOBJS-$(HAVE_GNU_WINDRES)                += avfilterres.o
 
 SKIPHEADERS-$(CONFIG_LCMS2)                  += fflcms2.h
 SKIPHEADERS-$(CONFIG_LIBVIDSTAB)             += vidstabutils.h
+SKIPHEADERS-$(CONFIG_LIBVIPS)                += vipsutils.h
 
 SKIPHEADERS-$(CONFIG_QSVVPP)                 += qsvvpp.h stack_internal.h
 SKIPHEADERS-$(CONFIG_OPENCL)                 += opencl.h

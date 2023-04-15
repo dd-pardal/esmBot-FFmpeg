@@ -231,6 +231,8 @@ External library support:
   --enable-libdavs2        enable AVS2 decoding via libdavs2 [no]
   --enable-libdc1394       enable IIDC-1394 grabbing using libdc1394
                            and libraw1394 [no]
+  --enable-libesmbot       enable the esmBot image processing library,
+                           needed for the esmBot filters [no]
   --enable-libfdk-aac      enable AAC de/encoding via libfdk-aac [no]
   --enable-libflite        enable flite (voice synthesis) support via libflite [no]
   --enable-libfontconfig   enable libfontconfig, useful for drawtext filter [no]
@@ -284,6 +286,7 @@ External library support:
   --enable-libuavs3d       enable AVS3 decoding via libuavs3d [no]
   --enable-libv4l2         enable libv4l2/v4l-utils [no]
   --enable-libvidstab      enable video stabilization using vid.stab [no]
+  --enable-libvips         enable libvips, needed for the esmBot filters [no]
   --enable-libvmaf         enable vmaf filter via libvmaf [no]
   --enable-libvo-amrwbenc  enable AMR-WB encoding via libvo-amrwbenc [no]
   --enable-libvorbis       enable Vorbis en/decoding via libvorbis,
@@ -544,23 +547,6 @@ warn(){
 die(){
     log "$@"
     echo "$error_color$bold_color$@$reset_color"
-    cat <<EOF
-
-If you think configure made a mistake, make sure you are using the latest
-version from Git.  If the latest version fails, report the problem to the
-ffmpeg-user@ffmpeg.org mailing list or IRC #ffmpeg on irc.libera.chat.
-EOF
-    if disabled logging; then
-        cat <<EOF
-Rerun configure with logging enabled (do not use --disable-logging), and
-include the log this produces with your report.
-EOF
-    else
-        cat <<EOF
-Include the log file "$logfile" produced by configure as this will help
-solve the problem.
-EOF
-    fi
     exit 1
 }
 
@@ -1816,6 +1802,7 @@ EXTERNAL_LIBRARY_LIST="
     libdav1d
     libdc1394
     libdrm
+    libesmbot
     libflite
     libfontconfig
     libfreetype
@@ -1860,6 +1847,7 @@ EXTERNAL_LIBRARY_LIST="
     libtwolame
     libuavs3d
     libv4l2
+    libvips
     libvmaf
     libvorbis
     libvpx
@@ -3784,6 +3772,12 @@ vstack_qsv_filter_deps="libmfx"
 vstack_qsv_filter_select="qsvvpp"
 xstack_qsv_filter_deps="libmfx"
 xstack_qsv_filter_select="qsvvpp"
+
+# esmBot filters
+ebcaption_filter_deps="libesmbot libvips"
+ebcaptionref_filter_deps="libesmbot libvips"
+ebmeme_filter_deps="libesmbot libvips"
+ebmemeref_filter_deps="libesmbot libvips"
 
 # examples
 avio_http_serve_files_deps="avformat avutil fork"
@@ -6556,6 +6550,11 @@ powf_args=2
 for func in $MATH_FUNCS; do
     eval check_mathfunc $func \${${func}_args:-1} $libm_extralibs
 done
+
+# esmBot
+enabled libesmbot         && { check_lib libesmbot "$PWD/../natives/c-bindings/image.h" esmbot_generate_caption -Xlinker "-rpath=$PWD/../build/Release" "$PWD/../build/Release/libimage-c.so" $(pkg-config --cflags --libs vips-cpp) -lstdc++ ||
+                               die "ERROR: esmBot image processing library build not found."; }
+enabled libvips           && require_pkg_config libvips vips vips/vips.h vips_init
 
 # these are off by default, so fail if requested and not available
 enabled avisynth          && { require_headers "avisynth/avisynth_c.h avisynth/avs/version.h" &&

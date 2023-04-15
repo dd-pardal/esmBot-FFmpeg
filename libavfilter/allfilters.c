@@ -583,6 +583,12 @@ extern const AVFilter ff_avsrc_avsynctest;
 extern const AVFilter ff_avsrc_amovie;
 extern const AVFilter ff_avsrc_movie;
 
+/* esmbot filters */
+extern const AVFilter ff_vsrc_ebcaption;
+extern const AVFilter ff_vsrc_ebcaptionref;
+extern const AVFilter ff_vsrc_ebmeme;
+extern const AVFilter ff_vsrc_ebmemeref;
+
 /* those filters are part of public or internal API,
  * they are formatted to not be found by the grep
  * as they are manually added again (due to their 'names'
