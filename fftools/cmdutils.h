@@ -99,6 +99,11 @@ int opt_default(void *optctx, const char *opt, const char *arg);
 int opt_timelimit(void *optctx, const char *opt, const char *arg);
 
 /**
+ * Limit the resident set size.
+ */
+int opt_memorylimit(void *optctx, const char *opt, const char *arg);
+
+/**
  * Parse a string and return its corresponding value as a double.
  * Exit from the application if the string cannot be correctly
  * parsed or the corresponding value is invalid.

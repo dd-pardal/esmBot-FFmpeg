@@ -1344,6 +1344,19 @@ int opt_timelimit(void *optctx, const char *opt, const char *arg)
     return 0;
 }
 
+int opt_memorylimit(void *optctx, const char *opt, const char *arg)
+{
+#if HAVE_SETRLIMIT
+    rlim_t lim = parse_number_or_die(opt, arg, OPT_INT64, 0, sizeof(rlim_t) >= sizeof(int64_t) ? INT64_MAX : INT_MAX);
+    struct rlimit rl = { lim, lim + 1 };
+    if (setrlimit(RLIMIT_DATA, &rl))
+        perror("setrlimit");
+#else
+    av_log(NULL, AV_LOG_WARNING, "-%s not implemented on this OS\n", opt);
+#endif
+    return 0;
+}
+
 #define OFFSET(x) offsetof(OptionsContext, x)
 const OptionDef options[] = {
     /* main options */
@@ -1433,6 +1446,8 @@ const OptionDef options[] = {
       "enable or disable interaction on standard input" },
     { "timelimit",      HAS_ARG | OPT_EXPERT,                        { .func_arg = opt_timelimit },
         "set max runtime in seconds in CPU user time", "limit" },
+    { "memorylimit",    HAS_ARG | OPT_EXPERT,                        { .func_arg = opt_memorylimit },
+        "set max resident set size in bytes", "limit" },
     { "dump",           OPT_BOOL | OPT_EXPERT,                       { &do_pkt_dump },
         "dump each input packet" },
     { "hex",            OPT_BOOL | OPT_EXPERT,                       { &do_hex_dump },
