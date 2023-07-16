@@ -94,7 +94,7 @@ static int xfade_opencl_load(AVFilterContext *avctx,
         return AVERROR(EINVAL);
         err = ff_opencl_filter_load_program_from_file(avctx, ctx->source_file);
     } else {
-        err = ff_opencl_filter_load_program(avctx, &ff_opencl_source_xfade, 1);
+        err = ff_opencl_filter_load_program(avctx, &ff_source_xfade_cl, 1);
     }
     if (err < 0)
         return err;
