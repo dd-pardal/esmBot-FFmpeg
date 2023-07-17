@@ -595,6 +595,10 @@ extern const AVFilter ff_avsrc_movie;
 /* esmbot filters */
 extern const AVFilter ff_vsrc_ebcaption;
 extern const AVFilter ff_vsrc_ebcaptionref;
+extern const AVFilter ff_vsrc_ebcaptiontwo;
+extern const AVFilter ff_vsrc_ebcaptiontworef;
+extern const AVFilter ff_vsrc_ebsnapchat;
+extern const AVFilter ff_vsrc_ebsnapchatref;
 extern const AVFilter ff_vsrc_ebmeme;
 extern const AVFilter ff_vsrc_ebmemeref;
 

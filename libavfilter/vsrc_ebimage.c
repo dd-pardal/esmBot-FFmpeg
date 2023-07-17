@@ -127,9 +127,19 @@ static int activate(AVFilterContext *ctx)
         if (!frame)
             return AVERROR(ENOMEM);
         frame->pts = imgsrc->pts;
-        frame->key_frame           = 1;
-        frame->interlaced_frame    = 0;
-        frame->pict_type           = AV_PICTURE_TYPE_I;
+#if FF_API_PKT_DURATION
+FF_DISABLE_DEPRECATION_WARNINGS
+        frame->key_frame = 1;
+FF_ENABLE_DEPRECATION_WARNINGS
+#endif
+        frame->flags |= AV_FRAME_FLAG_KEY;
+#if FF_API_INTERLACED_FRAME
+FF_DISABLE_DEPRECATION_WARNINGS
+        frame->interlaced_frame = 0;
+FF_ENABLE_DEPRECATION_WARNINGS
+#endif
+        frame->flags &= ~AV_FRAME_FLAG_INTERLACED;
+        frame->pict_type = AV_PICTURE_TYPE_I;
         frame->sample_aspect_ratio = (AVRational) { 1, 1 };
 
         imgsrc->pts++;
@@ -211,6 +221,122 @@ const AVFilter ff_vsrc_ebcaptionref = {
     .priv_class      = &ebcaption_class,
     .priv_size       = sizeof(EBImageSourceContext),
     .init            = caption_init,
+    .uninit          = uninit,
+    .activate        = activate,
+    FILTER_INPUTS(ref_inputs),
+    FILTER_OUTPUTS(outputs),
+    FILTER_QUERY_FUNC(query_formats),
+};
+
+#endif
+
+
+#if CONFIG_EBCAPTIONTWO_FILTER
+
+#define EBCAPTIONTWOREF_OPTIONS \
+{ "text", "set caption text", OFFSET(text0), AV_OPT_TYPE_STRING, {.str = "get real"}, 0, 0, FLAGS },\
+{ "font", "set font name", OFFSET(font), AV_OPT_TYPE_STRING, {.str = "futura"}, 0, 0, FLAGS }
+static const AVOption ebcaptiontwo_options[] = {
+    EBCAPTIONTWOREF_OPTIONS,
+    WIDTH_OPTION,
+    { NULL }
+};
+static const AVOption ebcaptiontworef_options[] = {
+    EBCAPTIONTWOREF_OPTIONS,
+    { NULL }
+};
+
+AVFILTER_DEFINE_CLASS(ebcaptiontwo);
+
+static VipsImage *caption_two_generate_image(EBImageSourceContext *imgsrc)
+{
+    return esmbot_generate_caption_two(imgsrc->width, imgsrc->text0, "", imgsrc->font);
+}
+
+static av_cold int caption_two_init(AVFilterContext *ctx)
+{
+    EBImageSourceContext *imgsrc = ctx->priv;
+    imgsrc->generate_image = caption_two_generate_image;
+    imgsrc->output_format = AV_PIX_FMT_RGB24;
+    return init(ctx);
+}
+
+const AVFilter ff_vsrc_ebcaptiontwo = {
+    .name            = "ebcaptiontwo",
+    .description     = NULL_IF_CONFIG_SMALL("Render an esmBot caption2."),
+    .priv_class      = &ebcaptiontwo_class,
+    .priv_size       = sizeof(EBImageSourceContext),
+    .init            = caption_two_init,
+    .uninit          = uninit,
+    .activate        = activate,
+    .inputs          = NULL,
+    FILTER_OUTPUTS(outputs),
+    FILTER_QUERY_FUNC(query_formats),
+};
+const AVFilter ff_vsrc_ebcaptiontworef = {
+    .name            = "ebcaptiontworef",
+    .description     = NULL_IF_CONFIG_SMALL("Render an esmBot caption2 with the same width as the input video."),
+    .priv_class      = &ebcaptiontwo_class,
+    .priv_size       = sizeof(EBImageSourceContext),
+    .init            = caption_two_init,
+    .uninit          = uninit,
+    .activate        = activate,
+    FILTER_INPUTS(ref_inputs),
+    FILTER_OUTPUTS(outputs),
+    FILTER_QUERY_FUNC(query_formats),
+};
+
+#endif
+
+
+#if CONFIG_EBSNAPCHAT_FILTER
+
+#define EBSNAPCHATREF_OPTIONS \
+{ "text", "set caption text", OFFSET(text0), AV_OPT_TYPE_STRING, {.str = "get real"}, 0, 0, FLAGS },\
+{ "font", "set font name", OFFSET(font), AV_OPT_TYPE_STRING, {.str = "futura"}, 0, 0, FLAGS }
+static const AVOption ebsnapchat_options[] = {
+    EBSNAPCHATREF_OPTIONS,
+    SIZE_OPTION,
+    { NULL }
+};
+static const AVOption ebsnapchatref_options[] = {
+    EBSNAPCHATREF_OPTIONS,
+    { NULL }
+};
+
+AVFILTER_DEFINE_CLASS(ebsnapchat);
+
+static VipsImage *snapchat_generate_image(EBImageSourceContext *imgsrc)
+{
+    return esmbot_generate_snapchat_overlay(imgsrc->width, imgsrc->text0, "", imgsrc->font);
+}
+
+static av_cold int snapchat_init(AVFilterContext *ctx)
+{
+    EBImageSourceContext *imgsrc = ctx->priv;
+    imgsrc->generate_image = snapchat_generate_image;
+    imgsrc->output_format = AV_PIX_FMT_RGBA;
+    return init(ctx);
+}
+
+const AVFilter ff_vsrc_ebsnapchat = {
+    .name            = "ebsnapchat",
+    .description     = NULL_IF_CONFIG_SMALL("Render an esmBot Snapchat caption overlay."),
+    .priv_class      = &ebsnapchat_class,
+    .priv_size       = sizeof(EBImageSourceContext),
+    .init            = snapchat_init,
+    .uninit          = uninit,
+    .activate        = activate,
+    .inputs          = NULL,
+    FILTER_OUTPUTS(outputs),
+    FILTER_QUERY_FUNC(query_formats),
+};
+const AVFilter ff_vsrc_ebsnapchatref = {
+    .name            = "ebsnapchatref",
+    .description     = NULL_IF_CONFIG_SMALL("Render an esmBot Snapchat caption overlay with the same width as the input video."),
+    .priv_class      = &ebsnapchat_class,
+    .priv_size       = sizeof(EBImageSourceContext),
+    .init            = snapchat_init,
     .uninit          = uninit,
     .activate        = activate,
     FILTER_INPUTS(ref_inputs),

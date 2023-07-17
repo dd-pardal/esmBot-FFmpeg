@@ -638,6 +638,10 @@ OBJS-$(CONFIG_LIBSHADERC)                    += vulkan_shaderc.o
 # esmBot filters
 OBJS-$(CONFIG_EBCAPTION_FILTER)              += vsrc_ebimage.o vipsutils.o
 OBJS-$(CONFIG_EBCAPTIONREF_FILTER)           += vsrc_ebimage.o vipsutils.o
+OBJS-$(CONFIG_EBCAPTIONTWO_FILTER)           += vsrc_ebimage.o vipsutils.o
+OBJS-$(CONFIG_EBCAPTIONTWOREF_FILTER)        += vsrc_ebimage.o vipsutils.o
+OBJS-$(CONFIG_EBSNAPCHAT_FILTER)             += vsrc_ebimage.o vipsutils.o
+OBJS-$(CONFIG_EBSNAPCHATREF_FILTER)          += vsrc_ebimage.o vipsutils.o
 OBJS-$(CONFIG_EBMEME_FILTER)                 += vsrc_ebimage.o vipsutils.o
 OBJS-$(CONFIG_EBMEMEREF_FILTER)              += vsrc_ebimage.o vipsutils.o
 
